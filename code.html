@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Collaboratif - Septembre 2026</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .calendar {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .week {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .day {
+            width: 140px;
+            min-height: 140px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .day-header {
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+        .day-number {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .day-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .add-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: flex-end;
+        }
+        .add-button:hover {
+            background-color: #45a049;
+        }
+        .devoir {
+            background-color: #e7f3fe;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            font-size: 11px;
+            border-left: 3px solid #2196F3;
+        }
+
+
+
+
+        .devoir.important {
+            background-color: #ffebee;
+            border-left: 3px solid #f44336;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            height: 60px;
+            resize: none;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #333;
+        }
+        .important-option {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+.matiere-francais { background-color: #0c85c139; border-left: 3px solid #0c85c1; }
+.matiere-maths { background-color: #ffffff; border-left: 3px solid #e3df0c; }
+.matiere-histoire-geo { background-color: #ffffff; border-left: 3px solid #ff0707; }
+.matiere-emc { background-color: #ffffff; border-left: 3px solid #68a565; }
+.matiere-anglais { background-color: #e1f5fe; border-left: 3px solid #c55deb; }
+.matiere-allemand { background-color: #fce4ec; border-left: 3px solid #034a07; }
+.matiere-espagnol { background-color: #fff3e0; border-left: 3px solid #ff9800; }
+.matiere-spe-maths { background-color: #e0f7fa; border-left: 3px solid #806a07; }
+.matiere-spe-physique { background-color: #e8eaf6; border-left: 3px solid #170164; }
+.matiere-spe-svt { background-color: #f1f8e9; border-left: 3px solid #3e6822; }
+.matiere-spe-nsi { background-color: #f5f5f5; border-left: 3px solid #17336a; }
+.matiere-spe-hggsp { background-color: #fafafa; border-left: 3px solid #9600a4; }
+.matiere-spe-hlp { background-color: #f0f4c3; border-left: 3px solid #285246; }
+.matiere-spe-ses { background-color: #e0f2f1; border-left: 3px solid #f03030; }
+.matiere-spe-amc { background-color: #e1bee7; border-left: 3px solid #6f1c48; }
+.matiere-foi-et-societe { background-color: #f3e5f5; border-left: 3px solid #000000; }
+.matiere-important { background-color: #ffebee; border-left: 3px solid #c30000; font-weight: bold; }
+
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Agenda Collaboratif - Septembre 2026</h1>
+    <div class="calendar">
+        <!-- Semaine 1 -->
+        <div class="week">
+            <div class="day" data-date="2026-09-01">
+                <div class="day-header">Lundi 1</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-01')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-02">
+                <div class="day-header">Mardi 2</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-02')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-03">
+                <div class="day-header">Mercredi 3</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-03')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-04">
+                <div class="day-header">Jeudi 4</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-04')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-05">
+                <div class="day-header">Vendredi 5</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-05')">+</button>
+            </div>
+        </div>
+        
+        <!-- Semaine 2 -->
+        <div class="week">
+            <div class="day" data-date="2026-09-07">
+                <div class="day-header">Lundi 7</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-07')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-08">
+                <div class="day-header">Mardi 8</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-08')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-09">
+                <div class="day-header">Mercredi 9</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-09')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-10">
+                <div class="day-header">Jeudi 10</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-10')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-11">
+                <div class="day-header">Vendredi 11</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-11')">+</button>
+            </div>
+        </div>
+        
+        <!-- Semaine 3 -->
+        <div class="week">
+            <div class="day" data-date="2026-09-14">
+                <div class="day-header">Lundi 14</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-14')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-15">
+                <div class="day-header">Mardi 15</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-15')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-16">
+                <div class="day-header">Mercredi 16</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-16')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-17">
+                <div class="day-header">Jeudi 17</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-17')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-18">
+                <div class="day-header">Vendredi 18</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-18')">+</button>
+            </div>
+        </div>
+        
+        <!-- Semaine 4 -->
+        <div class="week">
+            <div class="day" data-date="2026-09-21">
+                <div class="day-header">Lundi 21</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-21')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-22">
+                <div class="day-header">Mardi 22</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-22')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-23">
+                <div class="day-header">Mercredi 23</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-23')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-24">
+                <div class="day-header">Jeudi 24</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-24')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-25">
+                <div class="day-header">Vendredi 25</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-25')">+</button>
+            </div>
+        </div>
+        
+        <!-- Semaine 5 -->
+        <div class="week">
+            <div class="day" data-date="2026-09-28">
+                <div class="day-header">Lundi 28</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-28')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-29">
+                <div class="day-header">Mardi 29</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-29')">+</button>
+            </div>
+            <div class="day" data-date="2026-09-30">
+                <div class="day-header">Mercredi 30</div>
+                <div class="day-content"></div>
+                <button class="add-button" onclick="openModal('2026-09-30')">+</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modale pour ajouter un devoir -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-header">Ajouter un devoir</div>
+            <form id="devoirForm">
+                <div class="form-group">
+                    <label for="matiere">Matière :</label>
+                    <select id="matiere" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="Français">Français</option>
+                        <option value="Maths">Maths Complémentaires</option>
+                        <option value="Histoire-Géo">Histoire-Géo</option>
+                        <option value="EMC">EMC</option>
+                        <option value="Vie de classe">Vie de classe</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Allemand">Allemand</option>
+                        <option value="Espagnol">Espagnol</option>
+                        <option value="Spé Maths">Spé Maths</option>
+                        <option value="Spé Physique">Spé Physique</option>
+                        <option value="Spé SVT">Spé SVT</option>
+                        <option value="Spé NSI">Spé NSI</option>
+                        <option value="Spé HGGSP">Spé HGGSP</option>
+                        <option value="Spé HLP">Spé HLP</option>
+                        <option value="Spé SES">Spé SES</option>
+                        <option value="Spé AMC">Spé AMC</option>
+                        <option value="Foi et société (mdr)">Foi et société (mdr)</option>
+                        <option value="IMPORTANT" class="important-option">IMPORTANT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description du devoir :</label>
+                    <textarea id="description" required></textarea>
+                </div>
+                <button type="button" class="submit-button" onclick="addDevoir()">Ajouter</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+
+
+
+
+        let currentDate = null;
+        
+   
+        function openModal(date) {
+            currentDate = date;
+            document.getElementById('modal').style.display = 'block';
+        }
+        
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('matiere').value = '';
+            document.getElementById('description').value = '';
+        }
+               
+
+
+        function addDevoir() {
+    const matiere = document.getElementById('matiere').value;
+    const description = document.getElementById('description').value;
+
+    if (!matiere || !description) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+    }
+
+    const dayElement = document.querySelector(`[data-date="${currentDate}"] .day-content`);
+    const devoirElement = document.createElement('div');
+    devoirElement.className = 'devoir';
+
+   
+    if (matiere === 'Français') {
+        devoirElement.classList.add('matiere-francais');
+    } else if (matiere === 'Maths Complémentaires') {
+        devoirElement.classList.add('matiere-maths');
+    } else if (matiere === 'Histoire-Géo') {
+        devoirElement.classList.add('matiere-histoire-geo');
+    }
+    
+    devoirElement.innerHTML = `<strong>${matiere} :</strong> ${description}`;
+    dayElement.appendChild(devoirElement);
+
+    closeModal();
+}       
+
+
+
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
